@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wms.repository.OutStorageRepository">
+	
+	<resultMap type="OutStorage" id="outStorage">
+		<id property="id" column="record_id"/>
+		<result property="customerId" column="customerId"/>
+		<result property="customerName" column="customerName"/>
+		<result property="goodId" column="goodId"/>
+		<result property="goodName" column="goodName"/>
+		<result property="number" column="number"/>
+		<result property="time" column="record_time"/>
+		<result property="person" column="record_person"/>
+		<result property="warehouseId" column="record_wId"/>
+	</resultMap>
+	
+    <select id="findAllById" resultMap="outStorage">
+		select
+			r.record_id as record_id,
+			r.record_customerId as customerId,
+			c.customer_name as customerName,
+			r.record_goodId as goodId,
+			g.good_name as goodName,
+			r.record_number as number,
+			r.record_time as record_time,
+			r.record_person as record_person,
+			r.record_wId as record_wId
+		from
+			wms_record_out r,wms_goods g,wms_customer c
+		where
+			r.record_customerId = c.customer_id and
+			r.record_time between #{param5} and #{param6} and
+			r.record_goodId = g.good_id and
+			r.record_id = #{id}
+			<if test="warehouseId > 0">
+		 		and r.record_wId = #{warehouseId}
+		 	</if>
+		order by 
+		    r.record_id limit #{param1},#{param2}
+     </select>
+     
+    
+     
+      <select id="findAllByGoodId" resultMap="outStorage">
+		select
+			r.record_id as record_id,
+			r.record_customerId as customerId,
+			c.customer_name as customerName,
+			r.record_goodId as goodId,
+			g.good_name as goodName,
+			r.record_number as number,
+			r.record_time as record_time,
+			r.record_person as record_person,
+			r.record_wId as record_wId
+		from
+			wms_record_out r,wms_goods g,wms_customer c
+		where
+			r.record_customerId = c.customer_id and
+			r.record_time between #{param5} and #{param6} and
+			r.record_goodId = g.good_id and
+			r.record_goodId = #{goodId}
+			<if test="warehouseId > 0">
+		 		and r.record_wId = #{warehouseId}
+		 	</if>
+		order by 
+		    r.record_id limit #{param1},#{param2}
+     </select>
+
+
+     <select id="findAllByGoodName" resultMap="outStorage">
+		select
+			r.record_id as record_id,
+			r.record_customerId as customerId,
+			c.customer_name as customerName,
+			r.record_goodId as goodId,
+			g.good_name as goodName,
+			r.record_number as number,
+			r.record_time as record_time,
+			r.record_person as record_person,
+			r.record_wId as record_wId
+		from
+			wms_record_out r,wms_goods g,wms_customer c
+		where
+			r.record_customerId = c.customer_id and
+			r.record_time between #{param5} and #{param6} and
+			r.record_goodId = g.good_id and
+			g.good_name like concat('%',#{param3},'%')
+			<if test="warehouseId > 0">
+		 		and r.record_wId = #{warehouseId}
+		 	</if>
+		order by 
+		    r.record_id limit #{param1},#{param2}
+     </select>
+
+     <select id="findAllByCustomerId" resultMap="outStorage">
+		select
+			r.record_id as record_id,
+			r.record_customerId as customerId,
+			c.customer_name as customerName,
+			r.record_goodId as goodId,
+			g.good_name as goodName,
+			r.record_number as number,
+			r.record_time as record_time,
+			r.record_person as record_person,
+			r.record_wId as record_wId
+		from
+			wms_record_out r,wms_goods g,wms_customer c
+		where
+			r.record_customerId = c.customer_id and
+			r.record_time between #{param5} and #{param6} and
+			r.record_goodId = g.good_id and
+			r.record_customerId = #{customerId}
+			<if test="warehouseId > 0">
+		 		and r.record_wId = #{warehouseId}
+		 	</if>
+		order by 
+		    r.record_id limit #{param1},#{param2}
+     </select>
+     
+     <select id="findAllByCustomerName" resultMap="outStorage">
+		select
+			r.record_id as record_id,
+			r.record_customerId as customerId,
+			c.customer_name as customerName,
+			r.record_goodId as goodId,
+			g.good_name as goodName,
+			r.record_number as number,
+			r.record_time as record_time,
+			r.record_person as record_person,
+			r.record_wId as record_wId
+		from
+			wms_record_out r,wms_goods g,wms_customer c
+		where
+			r.record_customerId = c.customer_id and
+			r.record_time between #{param5} and #{param6} and
+			r.record_goodId = g.good_id and
+			c.customer_name like concat('%',#{param3},'%')
+			<if test="warehouseId > 0">
+		 		and r.record_wId = #{warehouseId}
+		 	</if>
+		order by 
+		    r.record_id limit #{param1},#{param2}
+     </select>
+
+    <select id="findAllAndWarehouseId" resultMap="outStorage">
+		select
+			r.record_id as record_id,
+			r.record_customerId as customerId,
+			c.customer_name as customerName,
+			r.record_goodId as goodId,
+			g.good_name as goodName,
+			r.record_number as number,
+			r.record_time as record_time,
+			r.record_person as record_person,
+			r.record_wId as record_wId
+		from
+			wms_record_out r,wms_goods g,wms_customer c
+		where
+			r.record_customerId = c.customer_id and
+			r.record_time between #{param4} and #{param5} and
+			r.record_goodId = g.good_id 
+			<if test="warehouseId > 0">
+		 		and r.record_wId = #{warehouseId}
+		 	</if>
+		order by 
+		    r.record_id limit #{param1},#{param2}
+     </select>
+
+     <insert id="insert">
+		insert into wms_record_out(record_customerId,record_goodId,record_number,record_time,record_person,record_wId)
+		values(#{customerId},#{goodId},#{number},#{time},#{person},#{warehouseId})
+     </insert>
+
+     <update id="update">
+		update 
+			wms_record_out
+		set
+			record_customerId = #{customerId},
+			record_goodId = #{goodId},
+			record_number = #{number},
+			record_time = #{time},
+			record_person = #{person}
+		where
+			record_id = #{id}
+    </update>
+
+    <select id="count" resultType="int">
+		select count(*) from wms_record_out;
+	</select>
+	
+	<delete id="deleteById">
+		delete from wms_record_out
+		where record_id = #{id}
+    </delete>
+
+
+
+</mapper>

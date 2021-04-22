@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wms.repository.WarehouseRepository">
+	
+	<resultMap type="Warehouse" id="warehouse">
+		<id property="id" column="warehouse_id"/>
+		<result property="address" column="warehouse_address"/>
+		<result property="status" column="warehouse_status"/>
+		<result property="area" column="warehouse_area"/>
+		<result property="desc" column="warehouse_desc"/>
+		<result property="adminName" column="username"/>
+	</resultMap>
+
+	<select id="findAll" resultMap="warehouse">
+		select
+			r.warehouse_id,
+			r.warehouse_address,
+			r.warehouse_status,
+			r.warehouse_area,
+			r.warehouse_desc,
+			u.username
+		from
+			wms_warehouse r left join t_user u on(r.warehouse_ID = u.w_admin_wId)
+	</select>
+	
+	<select id="count" resultType="int">
+		select count(*) from wms_warehouse;
+	</select>
+	
+	<select id="findByName" resultMap="warehouse">
+		select
+			r.warehouse_ID,
+			r.warehouse_address,
+			r.warehouse_status,
+			r.warehouse_area,
+			r.warehouse_desc,
+			u.username
+		from
+			wms_warehouse r left join t_user u on(r.warehouse_ID = u.w_admin_wId)
+		where
+			r.warehouse_address like concat('%',#{param3},'%')
+		order by 
+		    r.warehouse_id limit #{param1},#{param2}
+	</select>
+	
+	<select id="findById" resultMap="warehouse">
+		select
+			r.warehouse_id,
+			r.warehouse_address,
+			r.warehouse_status,
+			r.warehouse_area,
+			r.warehouse_desc,
+			u.username
+		from
+			wms_warehouse r left join t_user u on(r.warehouse_ID = u.w_admin_wId)
+		where
+			r.warehouse_id = #{param3}
+		order by 
+		     r.warehouse_id limit #{param1},#{param2}
+	</select>
+	
+	<select id="find_ById" resultMap="warehouse">
+		select
+			r.warehouse_id,
+			r.warehouse_address,
+			r.warehouse_status,
+			r.warehouse_area,
+			r.warehouse_desc,
+			u.username
+		from
+			wms_warehouse r left join t_user u on(r.warehouse_ID = u.w_admin_wId)
+		where
+			r.warehouse_ID = #{id}
+	</select>
+	
+	
+	<insert id="insert" keyProperty="id" useGeneratedKeys="true">
+		insert into wms_warehouse(warehouse_address,warehouse_status,warehouse_area,warehouse_desc)
+		values(#{address},#{status},#{area},#{desc})
+	</insert>
+	
+	<update id="update">
+		update
+			wms_warehouse
+		set
+			warehouse_address = #{address},
+			warehouse_status = #{status},
+			warehouse_area = #{area},
+			warehouse_desc = #{desc}
+		where
+			warehouse_id = #{id}
+	</update>
+	
+	<delete id="deleteById">
+		delete from 
+		    wms_warehouse
+		where
+		    warehouse_id = #{id}
+	</delete>
+	
+	<!--发现没被使用的仓库id  -->
+	<select id="findAllId" resultMap="warehouse">
+		select
+			w.warehouse_id
+		from
+			wms_warehouse w
+		where not exists
+		(
+			select *
+			from
+				t_user u
+			where
+				u.w_admin_wId = w.warehouse_id
+		)
+	</select>
+	
+	<select id="findAll_Id" resultMap="warehouse">
+		select
+			w.warehouse_id
+		from
+			wms_warehouse w
+	</select>
+	
+	<select id="selectByID" resultMap="warehouse">
+		select
+			r.REPO_ID,
+			r.REPO_ADDRESS,
+			r.REPO_STATUS,
+			r.REPO_AREA,
+			r.REPO_DESC,
+			ra.REPO_ADMIN_NAME
+		from
+			wms_respository r left join wms_repo_admin ra on(r.REPO_ID = ra.REPO_ADMIN_REPOID)
+		where
+			r.REPO_ID = #{repositoryID}
+	</select>
+	
+	<select id="selectByAddress" resultMap="warehouse">
+		select
+			r.REPO_ID,
+			r.REPO_ADDRESS,
+			r.REPO_STATUS,
+			r.REPO_AREA,
+			r.REPO_DESC,
+			ra.REPO_ADMIN_NAME
+		from
+			wms_respository r left join wms_repo_admin ra on(r.REPO_ID = ra.REPO_ADMIN_REPOID)
+		where
+			r.REPO_ADDRESS like concat(concat("%",#{address},"%"))
+	</select>
+	
+	
+	<insert id="insertbatch">
+		insert into wms_respository(REPO_ADDRESS,REPO_STATUS,REPO_AREA,REPO_DESC)
+		values
+		<foreach collection="list" item="warehouse" separator=",">
+			(#{repository.address},#{repository.status},#{repository.area},#{repository.desc})
+		</foreach>
+	</insert>
+	
+	
+	
+	
+</mapper>

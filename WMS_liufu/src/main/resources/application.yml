@@ -1,0 +1,25 @@
+server:
+  port: 8030
+
+spring:
+  application:
+    name: wms
+  aop:
+    auto: true
+  session:
+        timeout: 14400
+  thymeleaf:
+    prefix: classpath:/static/
+    suffix: .html
+    cache: false 
+    encoding: UTF-8 
+    mode: HTML5 
+  datasource:
+        driverClassName: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/wms_liu?serverTimezone=GMT
+        username: root
+        password: root
+
+mybatis:
+  mapper-locations: classpath:mapping/*.xml
+  type-aliases-package: com.wms.entity

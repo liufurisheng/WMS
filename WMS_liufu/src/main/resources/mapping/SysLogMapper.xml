@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wms.repository.SysLogRepository">
+	
+	<resultMap type="SysLog" id="sysLog">
+		<id property="id" column="id"/>
+		<result property="username" column="username"/>
+		<result property="operation" column="operation"/>
+		<result property="method" column="method"/>
+		<result property="params" column="params"/>
+		<result property="ip" column="ip"/>
+		<result property="createDate" column="createDate"/>
+		<result property="resultType" column="resultType"/>
+	</resultMap> 	
+
+	
+	<insert id="save" >
+		insert into sys_log(username,operation,method,params,ip,createDate,resultType)
+		values(#{username},#{operation},#{method},#{params},#{ip},#{createDate},#{resultType})
+	</insert>
+	
+	<select id="findAllPage" resultMap="sysLog">
+		select
+			s.id,
+			s.username,
+			s.operation,
+			s.method,
+			s.params,
+			s.ip,
+			s.createDate,
+			s.resultType
+		from
+			sys_log s
+		where
+		     s.createDate between #{param3} and #{param4}
+		order by 
+		    s.id limit #{param1},#{param2}
+	</select>
+	
+	<select id="findByNamePage" resultMap="sysLog">
+		select
+			s.id,
+			s.username,
+			s.operation,
+			s.method,
+			s.params,
+			s.ip,
+			s.createDate,
+			s.resultType
+		from
+			sys_log s
+		where
+			s.username like concat('%',#{param3},'%')
+		and	
+		    s.createDate between #{param4} and #{param5}
+		order by 
+		    s.id limit #{param1},#{param2}
+	</select>
+	
+	<select id="findByOperationPage" resultMap="sysLog">
+		select
+			s.id,
+			s.username,
+			s.operation,
+			s.method,
+			s.params,
+			s.ip,
+			s.createDate,
+			s.resultType
+		from
+			sys_log s
+		where
+			s.operation like concat('%',#{param3},'%')
+		and	
+		    s.createDate between #{param4} and #{param5}
+		order by 
+		    s.id limit #{param1},#{param2}
+	</select>
+	
+	<select id="count" resultType="int">
+		select count(*) from sys_log;
+	</select>
+	
+	<delete id="deleteById">
+		delete from sys_log
+		where id = #{id}
+	</delete>
+	
+ </mapper>

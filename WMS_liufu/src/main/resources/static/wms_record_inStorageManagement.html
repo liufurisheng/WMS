@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" media="all">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://www.layuicdn.com/layui-v2.5.5/layui.js"></script>
+    <style>
+    
+
+        .layui-select{
+            height:60px;
+        }
+    
+        .layui-form-label{
+            width: 60px;
+           
+        }
+        .layui-input-block {
+            margin-left: 20px;
+             min-height: 0px
+        }
+    </style>
+
+<body class="layui-layout-body">
+
+<div class="layui-container" style="margin-top: 20px;width: 1200px;">
+     
+    
+
+	
+	
+	
+	
+<div class="demoTable">
+     查询类型:
+       <div class="layui-input-inline">
+                    <div class="layui-form">
+                        <select name="type" lay-verify="" lay-filter="test" id="type">
+                            <option value="all">查询所有</option>
+                            <option value="id">入库编号查询</option>
+                            <option value="supplierId">按供应商编号查询</option>
+                            <option value="supplierName">按供应商名称查询</option>
+                            <option value="goodId">按货物编号查询</option>
+                            <option value="goodName">按货物名称查询</option>
+                        </select>
+                    </div>
+       </div>
+
+    关键字：
+    <div class="layui-inline">
+        <input name="key" class="layui-input" id="key" autocomplete="off" >
+    </div>
+   
+   所属仓库:
+  <div class="layui-input-inline"> 
+     <div class="layui-form-item" >
+     <div class="layui-input-block" style="height:25px;">
+         <select name="warehouseId" id="warehouseId" lay-verify="required" lay-filter="warehouseIdFilter" style="height:35px;">
+         <option value="0" >查询所有</option>
+         </select>
+     </div>
+    </div>
+    </div>
+  
+
+    日期：
+    <div class="layui-inline">
+       <input type="text" class="layui-input" id="test1">
+    </div>
+    ----
+    <div class="layui-inline">
+       <input type="text" class="layui-input" id="test2">
+    </div>
+  
+  
+    
+    <button class="layui-btn" data-type="reload" id="search">检索名称</button>
+
+    
+</div>
+    
+   
+    <button id="export" class="layui-btn">导出表单</button>
+    <a class=layui-btn layui-btn-danger layui-btn-sm id="dataDel">批量删除</a>
+    <table class="layui-hide" id="test" style="width: 300px" lay-filter="test"></table>
+    
+    <!-- <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+     -->
+    <script th:src="@{/layui/layui.js}" charset="utf-8"></script>
+    
+    <script>
+    
+    layui.use('layer', function(){
+        var $ = layui.jquery, layer = layui.layer;
+        
+        $(document).on('click','#export',function(){
+       	   window.location.href="/InStorageManage/exportExcel";
+       });
+       
+        
+      });
+    
+    layui.use(['table','layer'], function(){
+            var table = layui.table;
+
+            table.render({
+                elem: '#test'
+                ,height: 500
+                ,url:'/InStorageManage/findAll'
+                ,title: '菜单列表'
+              // ,toolbar: '#toolbarDemo'
+                ,even:true
+                ,title: '商品表'
+                ,page: true
+                ,where: {type: "",key: "",warehouseId: "0",beganTime: "1995-04-12 00:00:00",endTime:"2121-04-22 00:00:00"}
+                ,totalrow: true
+                ,cols: [
+                    [    {type: 'checkbox', field:'id'}
+                        ,{field:'id', width:80, title: '入库编号', sort: true}
+                        ,{field:'supplierName', width:230, title: '供应商'}
+                        ,{field:'goodName', width:225, title: '货物'}
+                        ,{field:'warehouseId', width:100, title: '仓库编号'}
+                        ,{field:'number', width:100, title: '存储数量'}
+                        ,{field:'time', width:200, title: '入库时间'}
+                        ,{field:'person', width:150, title: '操作者'}
+                       // ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150}
+                   ]
+                ]
+               
+            });
+
+           //条件查询
+            var $ = layui.$,active={
+                reload:function(){
+                    table.reload('test',{
+                        where:{key:$("#key").val(),type:$("#type").val(),warehouseId:$("#warehouseId").val(),beganTime:$("#test1").val(),endTime:$("#test2").val()}
+                  
+                   // ,carStartPrice:$("#carStartPrice").val(),carEndPrice:$("#carEndPrice").val()
+                    })
+                }
+            }
+
+            $('.demoTable .layui-btn').on('click', function(){
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+           
+           
+           
+          //批量删除
+            $("#dataDel").on('click',function(){
+            	var checkStatus = table.checkStatus('test');
+            	  //获取选中数量
+            	var selectCount = checkStatus.data.length;
+            	 if(selectCount == 0){
+            		 layer.msg('批量删除至少选中一项数据',function(){});
+            		 return false;
+            	 }
+            	 layer.confirm('真的要删除选中的项吗？',function(index){
+            		 layer.close(index);
+            		 index = layer.load(1, {shade: [0.1,'#fff']});
+            		 var isStr="";
+            		 for(var i=0; i<selectCount; i++){
+            			 isStr = isStr + "," + checkStatus.data[i].id;
+            		 }
+            		 $.ajax({
+            			 type:'post',
+            			 data:{"isStr":isStr},
+            			 url:'/InStorageManage/delAll',
+            			 success:function(data){
+            				 if(data.code==0){
+            				  $('#seach').click();
+            			 } 
+            			 layer.close(index);
+            			 layer.msg(data.msg);
+            			 setTimeout('window.location.reload()',1000);
+
+            		 },error:function(code){   
+            		   parent.layer.msg('操作失败!',{icon: 5,time:1000});  
+            		  
+            		 }
+            		
+                 });
+             });
+            });	
+           
+           
+           
+           
+            //监听行工具事件
+       /*     table.on('tool(test)', function(obj){
+                var data = obj.data;
+             if(obj.event === 'del'){
+                    layer.confirm('确定要删除吗？', function(index){
+                        window.location.href="/storageManage/deleteById/"+data.id;
+                        layer.close(index);
+                       
+                    });
+                } else if(obj.event === 'edit'){
+                    window.location.href="/storageManage/findById/"+data.id;
+                }
+            });*/
+    });
+    
+    
+    layui.use('form', function () {
+    	var form = layui.form;
+    	var $ = layui.$;
+    	$(function(){
+    		$.ajax({
+    			type : "GET",
+       		    url : "/storageManage/findAllWarehouseId",
+       		    success:function(resp){
+       		       $.each(resp.allWarehouses, function (index, item) {
+       		    $('#warehouseId').append(new Option(item.id, item.id));// 下拉菜单里添加元素
+       		  });
+       		  layui.form.render("select[name=warehouseId]");//注意渲染页面表单，否则不显示数据
+                }
+            });
+         });
+     });
+    layui.use('laydate', function(){
+  	  var laydate = layui.laydate;
+  	  
+  	  //执行一个laydate实例
+  	  laydate.render({
+  	    elem: '#test1' //指定元素
+  	    ,type: 'datetime'
+  	    ,value: '2020-01-01 00:00:00'
+  	  });
+  	  laydate.render({
+    	    elem: '#test2' //指定元素
+    	    ,type: 'datetime'
+    	    ,value: new Date()
+    	  });
+  	});
+
+      
+    </script>
+    </div>
+
+
+</div>
+<script>
+    //二级菜单联动
+    layui.use('element', function(){
+        var element = layui.element;
+
+    });
+</script>
+</body>
+</html>

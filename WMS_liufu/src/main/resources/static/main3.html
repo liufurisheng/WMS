@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" media="all">
+    <script type="text/javascript" th:src="@{/layui/layui.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-3.3.1.min.js}"></script>
+    
+    <script type="text/javascript">
+        $(function () {
+             $("#wms_supplierManagement").click(function(){
+                $("iframe").attr("src","/supplierManage/redirect/wms_supplierManagement");
+            });
+            
+            $("#wms_customerManagement").click(function(){
+                $("iframe").attr("src","/customerManage/redirect/wms_customerManagement");
+            });
+            $("#wms_goodsManagement").click(function(){
+                $("iframe").attr("src","/goodsManage/redirect/wms_goodsManagement");
+            });
+            $("#wms_warehouseManagement").click(function(){
+                $("iframe").attr("src","/warehouseManage/redirect/wms_warehouseManagement");
+            });
+            
+            $("#wms_update_self").click(function(){
+            
+                $("iframe").attr("src","/user/redirect/wms_update_self");
+            });
+            $("#wms_storageManagement").click(function(){
+                $("iframe").attr("src","/user/redirect/wms_storageManagement2");
+            });
+            
+            $("#inStorage").click(function(){
+                $("iframe").attr("src","/InStorageManage/redirect/wms_InStorageManagement");
+            });
+            $("#wms_outStorage").click(function(){
+                $("iframe").attr("src","/OutStorageManage/redirect/wms_outStorageManagement");
+            });
+            $("#wms_record_inStorage2").click(function(){
+                $("iframe").attr("src","/InStorageManage/redirect/wms_record_inStorageManagement2");
+            });
+            $("#wms_record_outStorage2").click(function(){
+                $("iframe").attr("src","/OutStorageManage/redirect/wms_record_OutStorageeManagement2");
+            });
+           
+            
+            $("#test").click(function(){
+                $("iframe").attr("src","/user/redirect/index");
+            });
+            
+            
+           
+            
+        })
+    </script>
+
+</head>
+
+<div class="layui-layout layui-layout-admin">
+    <body class="layui-layout-body">
+    <!-- 顶部菜单开始 -->
+    <div class="layui-header">
+        <div class="layui-logo">仓库管理系统</div>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <img th:src="@{/images//1.jpg}" class="layui-nav-img">
+                    <span th:text="${session.admin.username}"></span>
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="/account/logout">退出系统</a></dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
+
+    <!-- 顶部菜单结束 -->
+
+    <!-- 左侧菜单开始 -->
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+                
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a class="" href="javascript:;">库存管理</a>
+                    <dl class="layui-nav-child">
+                        <dd class="layui-this"><a id="wms_storageManagement" href="javascript:void(0)">库存查询</a></dd>
+                        <dd><a id="wms_record_inStorage2" href="javascript:void(0)">入库记录</a></dd>
+                        <dd><a id="wms_record_outStorage2" href="javascript:void(0)">出库记录</a></dd>
+                    </dl>
+                </li>
+               
+                <li class="layui-nav-item">
+                    <a href="javascript:;">出入库管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a id="inStorage" href="javascript:void(0)">货物入库</a></dd>
+                        <dd><a id="wms_outStorage" href="javascript:void(0)">货物出库</a></dd> 
+                    </dl>
+                </li>
+                
+                 
+                
+                  <li class="layui-nav-item">
+                    <a href="javascript:;">基础数据</a>
+                    <dl class="layui-nav-child">
+                        <dd><a id="wms_supplierManagement" href="javascript:void(0)">供应商信息管理</a></dd>
+                        <dd><a id="wms_customerManagement" href="javascript:void(0)">客户信息管理</a></dd>
+                        <dd><a id="wms_goodsManagement" href="javascript:void(0)">货物信息管理</a></dd>
+                        <dd><a id="wms_warehouseManagement" href="javascript:void(0)">仓库信息管理</a></dd>
+                    </dl>
+                </li>
+                
+                 <li class="layui-nav-item">
+                    <a href="javascript:;">系统维护</a>
+                    <dl class="layui-nav-child">
+                        <dd><a id="wms_update_self" href="javascript:void(0)">修改本人密码</a></dd>
+                       
+                         <dd><a id="test" href="javascript:void(0)">测试代码页面</a></dd>
+                    </dl>
+                </li>
+           
+            </ul>
+        </div>
+    </div>
+    <!-- 左侧菜单结束 -->
+
+    <!-- 主体开始 -->
+    <div class="layui-body">
+
+        <iframe src="/storageManage/redirect/wms_storageManagement" style="width: 100%;height: 100%;border: 0px"></iframe>
+
+    </div>
+    <!-- 主体结束 -->
+
+    <!-- 底部开始 -->
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        @刘先生
+    </div>
+    <!-- 底部结束 -->
+</div>
+<script>
+    //二级菜单联动
+    layui.use('element', function(){
+        var element = layui.element;
+
+    });
+</script>
+</body>
+</html>

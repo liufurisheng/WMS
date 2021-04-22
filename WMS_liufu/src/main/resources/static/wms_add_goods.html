@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" media="all">
+</head>
+<body>
+<div class="layui-container" style="margin-top: 50px;">
+
+    <div class="layui-container"  style="width: 650px;height: 330px;padding-top: 80px;">
+        <form class="layui-form" action="/goodsManage/save" method="post">
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">商品名称:</label>
+                <div class="layui-inline">
+                    <input type="text" name="name" lay-verify="name" autocomplete="off" placeholder="请输入商品名称" class="layui-input">
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">商品类型:</label>
+                <div class="layui-inline">
+                    <input type="text" name="type" lay-verify="required" placeholder="请输入商品类型" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">商品规格：</label>
+                <div class="layui-inline">
+                    <input type="text" name="size" lay-verify="required" placeholder="请输入商品规格" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">商品价格：</label>
+                <div class="layui-inline">
+                    <input type="text" name="value" lay-verify="required|number" placeholder="请输入商品价格" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            
+            
+            
+            
+            <div class="layui-form-item">
+                <a href="http://localhost:8030/goodsManage/redirect/wms_goodsManagement" class="layui-btn" style="margin-left: 80px;">取消</a>
+                <button class="layui-btn" lay-submit="" style="margin-left: 30px;">提交</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script th:src="@{/layui/layui.js}" charset="utf-8"></script>
+<script>
+    layui.use(['form', 'element'], function(){
+        var form = layui.form;
+        var element = layui.element;
+
+        //自定义验证规则
+        form.verify({
+            name: function(value){
+                if(value.length == 0){
+                    return "用户名不能为空";
+                }
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

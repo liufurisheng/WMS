@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" media="all">
+</head>
+<body>
+<div class="layui-container" style="margin-top: 50px; ">
+
+    <div class="layui-container"  style="width: 800px;height: 100px;padding-top: 80px;">
+        <form class="layui-form" action="" method="post">
+            
+      <div class="layui-input-inline">
+          <div class="layui-form-item" >
+          <label class="layui-form-label">客户名称：</label>
+          <div class="layui-input-block" style="height:0px;">
+          <select name="customerId" id="customerId"  lay-verify="required" lay-filter="customerId" lay-search style="height:0px;">
+          <option value="0" ></option>
+          </select>
+          </div>
+          </div>
+      </div>
+  
+       <div class="layui-input-inline"> 
+          <div class="layui-form-item" >
+          <label class="layui-form-label">货物名称：</label>
+          <div class="layui-input-block" style="height:0px;">
+          <select name="goodId" id="goodId"  lay-verify="required" lay-filter="goodId"  lay-search style="height:0px;">
+          <option value="0" ></option>
+          </select>
+          </div>
+          </div>
+     </div>
+  
+   
+        <div style="margin-left: 30px; margin-bottom:30px;">
+		<input type="radio" name="type" lay-filter="type" value="0" title="显示详细信息" {if $rs.type==0}checked{/if}>
+		<input type="radio" name="type" lay-filter="type" value="1" title="隐藏详细信息" {if $rs.type==1}checked{/if} checked>
+        </div>
+       
+        <div class="" id="detailInfo1" style="margin-bottom:30px; margin-left: 30px;">
+			<label for="" class="text-info">客户信息</label>
+			<br>
+			<span for="" class="pull-right">客户ID：</span>
+			<span id="info_customer_ID">-</span>
+			<span for="" class="pull-right" style="margin-left: 40px;">负责人：</span>
+			<span id="info_customer_person" >-</span>
+			<span for="" class="pull-right" style="margin-left: 40px;">电子邮件：</span>
+			<span id="info_customer_email" >-</span>
+			</br>
+			<br>
+			<span for="" class="pull-right" >客户名：</span>
+			<span id="info_customer_name" >-</span>
+			<span for="" class="pull-right" style="margin-left: 40px;">联系电话：</span>
+			<span id="info_customer_tel" >-</span>
+			</br>
+			<br>
+			<span for="" class="pull-right"  >联系地址：</span>
+			<span id="info_customer_address" >-</span>
+			</br>
+		</div>
+		<div class="" id="detailInfo2" style="margin-bottom:30px; margin-left: 30px;">
+		    <label for="" class="text-info">货物信息</label>
+		    <br>
+		    <span for="" class="pull-right" >货物ID：</span>
+			<span id="info_goods_ID">-</span>
+		    <span for="" class="pull-right" style="margin-left: 40px;">货物类型：</span>
+			<span id="info_goods_type">-</span>
+			</br>
+			<br>
+			<span for="" class="pull-right" >货物名：</span>
+			<span id="info_goods_name">-</span>
+			<span for="" class="pull-right" style="margin-left: 40px;">货物规格：</span>
+			<span id="info_goods_size">-</span>
+			</br>
+			<br>
+			<span for="" class="pull-right">货物价值：</span>
+			<span id="info_goods_value">-</span>
+			</br>
+	   </div>		
+  
+  
+  
+
+  
+     <div class="layui-input-inline" style="margin-bottom:30px"> 
+          <div class="layui-form-item" >
+          <label class="layui-form-label">仓库编号：</label>
+          <div class="layui-input-block" style="height:0px;">
+          <select name="warehouseId" id="warehouseId"  lay-verify="required" lay-filter="warehouseIdFilter" lay-search style="height:0px;">
+          <option value="0" ></option>
+          </select>
+          </div>
+          </div>
+     </div>
+            
+     <div class="layui-form-item" style="margin-bottom:30px">
+          <label class="layui-form-label">出库数量:</label>
+          <div class="layui-inline">
+          <input type="text" class="layui-input" placeholder="请输入数量" id="number" name="number" lay-verify="required|number">
+          </div>
+     </div>
+    
+     <div class="layui-form-item">
+          <button class="layui-btn" lay-submit="" style="margin-left: 30px;" lay-filter="formDemo">提交</button>
+     </div>
+           
+            
+        </form>
+    </div>
+</div>
+<script th:src="@{/layui/layui.js}" charset="utf-8"></script>
+<script>
+    var customerCache = new Array();
+    var goodsCache = new Array();
+
+    layui.use(['form', 'element','jquery'], function(){
+        var form = layui.form;
+        var element = layui.element;
+        var layer = layui.layer;
+        var $ = layui.$;
+        
+        $.ajax({
+        	type : "GET",
+        	url: "/OutStorageManage/findAllInfo",
+        	success: function(resp){
+        		
+        		$.each(resp.allWarehouses, function (index, item) {
+        			   $('#warehouseId').append(new Option(item.id, item.id));// 下拉菜单里添加元素
+            	});
+        		
+        		$.each(resp.goods, function (index, item) {
+        			goodsCache.push(item);
+     			   $('#goodId').append(new Option(item.name, item.id));// 下拉菜单里添加元素
+         	   });
+        		
+        		$.each(resp.customers, function (index, item) {
+        			customerCache.push(item);
+      			   $('#customerId').append(new Option(item.name, item.id));// 下拉菜单里添加元素
+          	   });
+            		 
+        		      //layui.form.render("select[name=warehouseId]");//注意渲染页面表单，否则不显示数据
+        		      $("#detailInfo1").hide();
+        		      $("#detailInfo2").hide();
+            		  layui.form.render();
+                     }
+        });
+        
+        form.on('radio(type)', function(data){ 
+        	if(data.value == 1){
+        		$("#detailInfo1").hide();
+        		$("#detailInfo2").hide();
+        	}else{
+        		$("#detailInfo1").show();
+        		$("#detailInfo2").show();
+                
+            }
+        });
+        
+       //lay-filter="goodId"绑定时和过滤器绑定，当goodId被选定时显示详细信息
+       form.on('select(goodId)', function(data){
+    	  var goodId =data.value;
+    	   //alert(data.value);
+    		var detailInfo2;
+    		$.each(goodsCache,function(index,elem){
+    			if(elem.id == goodId){
+    				detailInfo2 = elem;
+    				if(detailInfo2.id==null)
+    					$('#info_goods_ID').text('-');
+    				else
+    					$('#info_goods_ID').text(detailInfo2.id);
+    				
+    				if(detailInfo2.name==null)
+    					$('#info_goods_name').text('-');
+    				else
+    					$('#info_goods_name').text(detailInfo2.name);
+    				
+    				if(detailInfo2.type==null)
+    					$('#info_goods_type').text('-');
+    				else
+    					$('#info_goods_type').text(detailInfo2.type);
+    				
+    				if(detailInfo2.size==null)
+    					$('#info_goods_size').text('-');
+    				else
+    					$('#info_goods_size').text(detailInfo2.size);
+    				
+    				if(detailInfo2.value==null)
+    					$('#info_goods_value').text('-');
+    				else
+    					$('#info_goods_value').text(detailInfo2.value);
+    			}
+    		})
+    	});  
+       
+       
+     //监听提交
+       form.on('submit(formDemo)', function (data) {
+           var customerId= data.field.customerId
+           var goodId= data.field.goodId
+           var warehouseId= data.field.warehouseId
+           var number =data.field.number
+           //return false;
+            $.ajax({
+            	      //{key:$("#key").val(),type:$("#type").val(),warehouseId:$("#warehouseId").val()}
+            	
+                     url: '/OutStorageManage/save',
+                     type: 'post',
+                     data: {customerId:customerId,goodId:goodId,warehouseId:warehouseId,number:number}
+                     ,success: function (resp) {
+                    	
+                    		layer.alert(resp.msg)
+                    	
+                              //layer.msg("提交成功");
+                             // alert(data.msg);
+                      }
+                   });return false
+        });
+       
+       
+       
+       
+       
+       
+       
+       
+        
+       form.on('select(customerId)', function(data){
+    	   var customerId =data.value;
+    	 //  alert(data.value);
+    	 
+    		var detailInfo2;
+   		$.each(customerCache,function(index,elem){
+   			if(elem.id == customerId){
+   				detailInfo2 = elem;
+
+   				if(detailInfo2.id == null)
+   					$('#info_customer_ID').text('-');
+   				else
+   					$('#info_customer_ID').text(detailInfo2.id);
+   				
+   				if(detailInfo2.name == null)
+   					$('#info_customer_name').text('-');
+   				else
+   					$('#info_customer_name').text(detailInfo2.name);
+   				
+   				if(detailInfo2.tel == null)
+   					$('#info_customer_tel').text('-');
+   				else
+   					$('#info_customer_tel').text(detailInfo2.tel);
+   				
+   				if(detailInfo2.address == null)
+   					$('#info_customer_address').text('-');
+   				else
+   					$('#info_customer_address').text(detailInfo2.address);
+   				
+   				if(detailInfo2.email == null)
+   					$('#info_customer_email').text('-');
+   				else
+   					$('#info_customer_email').text(detailInfo2.email);
+   				
+   				if(detailInfo2.person == null)
+   					$('#info_customer_person').text('-');
+   				else
+   					$('#info_customer_person').text(detailInfo2.person);
+   					
+   			}
+   		})
+   	});   
+ });
+        
+   
+</script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wms.repository.UserRepository">
+
+    <select id="login" resultType="User">
+		select * from t_user where username = #{param1} and password = #{param2}
+	</select>
+	
+	<select id="findByName" resultType="User">
+		select * from t_user where username = #{param1} 
+	</select>
+	
+	
+	<select id="findByNamePage" resultType="User">
+		select
+			t.id,
+			t.username,
+			t.telephone,
+			t.registerdate,
+			t.address,
+			t.w_admin_wId
+		from
+			t_user t
+		where
+			t.username like concat('%',#{param3},'%')
+		order by 
+		    t.id limit #{param1},#{param2}
+	</select>
+	
+	<select id="findByIdPage" resultType="User">
+		select
+			t.id,
+			t.username,
+			t.telephone,
+			t.registerdate,
+			t.address,
+			t.w_admin_wId
+		from
+			t_user t
+		where
+			t.id = #{param3}
+		order by 
+		     t.id limit #{param1},#{param2}
+	</select>
+	
+	
+	
+	<select id="findById" resultType="User">
+		select
+			t.id,
+			t.username,
+			t.w_admin_wId,
+			t.role,
+			t.perms
+		from
+			t_user t
+		where
+			t.id = #{param1}
+	</select>
+	
+	
+	
+	 <select id="getPassword" parameterType="String" resultType="String">
+        SELECT password
+        FROM t_user
+        WHERE username = #{username}
+    </select>
+    
+      <select id="getRole" parameterType="String" resultType="String">
+        SELECT role
+        FROM t_user
+        WHERE username = #{username}
+    </select>
+    
+    <insert id="save" parameterType="User">
+		insert into t_user(username,password,nickname,gender,telephone,registerdate,address,role,perms,salt,w_admin_wId) values(#{username},#{password},#{nickname},#{gender},#{telephone},#{registerdate},#{address},#{role},#{perms},#{salt},#{ w_admin_wId})
+	</insert>
+	
+	<select id="findAll" resultType="User">
+		select * from t_user order by id limit #{param1},#{param2}
+	</select>
+
+	<select id="count" resultType="int">
+		select count(*) from t_user;
+	</select>
+
+	<delete id="deleteById" parameterType="long">
+		delete from t_user where id = #{id}
+	</delete>
+	
+	<update id="update">
+		update
+			t_user t
+		set
+			t.username = #{username},
+			t.w_admin_wId = #{w_admin_wId},
+			t.role = #{role},
+			t.perms = #{perms}
+		where
+			t.id = #{id}
+	</update>
+	
+	
+	<update id="updatePassword">
+		update
+			t_user t
+		set
+			t.password = #{password}
+		where
+			t.id = #{id}
+	</update>
+	
+	<select id="findSalt" resultType="String">
+		select 
+		      t.salt 
+		from 
+		      t_user t
+	    where
+			t.id = #{id}
+	</select>
+	
+</mapper>

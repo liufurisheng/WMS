@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wms.repository.CustomerRepository">
+	
+	<resultMap type="Customer" id="customer">
+		<id property="id" column="customer_ID"/>
+		<result property="name" column="customer_NAME"/>
+		<result property="person" column="customer_PERSON"/>
+		<result property="tel" column="customer_TEL"/>
+		<result property="email" column="customer_EMAIL"/>
+		<result property="address" column="customer_ADDRESS"/>
+	</resultMap> 	
+	
+	<select id="findByName" resultMap="customer">
+		select
+			s.customer_ID,
+			s.customer_NAME,
+			s.customer_PERSON,
+			s.customer_TEL,
+			s.customer_EMAIL,
+			s.customer_ADDRESS
+		from
+			wms_customer s
+		where
+			s.customer_NAME like concat('%',#{param3},'%')
+		order by 
+		    s.customer_ID limit #{param1},#{param2}
+	</select>
+	
+	<select id="findBy_Name" resultMap="customer">
+		select
+			s.customer_ID,
+			s.customer_NAME,
+			s.customer_PERSON,
+			s.customer_TEL,
+			s.customer_EMAIL,
+			s.customer_ADDRESS
+		from
+			wms_customer s
+		where
+			s.customer_NAME like concat('%',#{param1},'%')
+		
+	</select>
+	
+	
+	
+	
+	
+	<select id="findById" resultMap="customer">
+		select
+			s.customer_ID,
+			s.customer_NAME,
+			s.customer_PERSON,
+			s.customer_TEL,
+			s.customer_EMAIL,
+			s.customer_ADDRESS
+		from
+			wms_customer s
+		where
+			s.customer_ID = #{param3}
+		order by 
+		     s.customer_ID limit #{param1},#{param2}
+	</select>
+	
+	<select id="find_ById" resultMap="customer">
+		select
+			s.customer_ID,
+			s.customer_NAME,
+			s.customer_PERSON,
+			s.customer_TEL,
+			s.customer_EMAIL,
+			s.customer_ADDRESS
+		from
+			wms_customer s
+		where
+			s.customer_ID = #{id}
+		
+	</select>
+	
+	 <select id="findAll" resultMap="customer">
+		 select
+			s.customer_ID,
+			s.customer_NAME,
+			s.customer_PERSON,
+			s.customer_TEL,
+			s.customer_EMAIL,
+			s.customer_ADDRESS
+		 from
+			wms_customer s
+		 order by s.customer_ID limit #{param1},#{param2}
+	</select>
+	
+	<select id="find_All" resultMap="customer">
+		 select
+			s.customer_ID,
+			s.customer_NAME,
+			s.customer_PERSON,
+			s.customer_TEL,
+			s.customer_EMAIL,
+			s.customer_ADDRESS
+		 from
+			wms_customer s
+	</select>
+	
+	<select id="count" resultType="int">
+		select count(*) from wms_customer;
+	</select>
+	
+	<insert id="insert" keyProperty="id" useGeneratedKeys="true">
+		insert into wms_customer(customer_NAME,customer_PERSON,customer_TEL,customer_EMAIL,customer_ADDRESS)
+		values(#{name},#{person},#{tel},#{email},#{address})
+	</insert>
+	<update id="update">
+		update 
+			wms_customer
+		set
+			customer_NAME = #{name},
+			customer_PERSON = #{person},
+			customer_TEL = #{tel},
+			customer_EMAIL = #{email},
+			customer_ADDRESS = #{address}
+		where
+			customer_ID = #{id}
+	</update>
+	
+	<delete id="deleteById">
+		delete from wms_customer
+		where customer_ID = #{id}
+	</delete>
+	
+	
+	
+ </mapper>

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wms.repository.StorageRepository">
+	
+	<!-- 结果映射 -->
+	<resultMap type="Storage" id="storage">
+		<id property="goodsId" column="good_id"/>
+		<result property="goodsName" column="good_Name"/>
+		<result property="goodsSize" column="good_Size"/>
+		<result property="goodsType" column="good_Type"/>
+		<result property="goodsValue" column="good_Value"/>
+		<result property="warehouseId" column="warehouseId"/>
+		<result property="number" column="number"/>
+		<!-- 
+		<association property="goodsInfo" javaType="com.ken.Goods" resultMap="goods"/>
+		 -->
+	</resultMap>
+	
+	<select id="count" resultType="int">
+		select count(*) from wms_record_storage;
+	</select>
+	 
+	<select id="selectAllAndWarehouseId" resultMap="storage">
+		select
+			w.warehouse_id as warehouseId,
+			s.record_number as number,
+			g.good_id as good_id,
+			g.good_name as good_Name,
+			g.good_type as good_Type,
+			g.good_size as good_Size,
+			g.good_value as good_Value
+		from
+			wms_record_storage s,wms_warehouse w, wms_goods g
+		where
+		 	s.record_goodId = g.good_id and
+		 	s.record_wId = w.warehouse_id
+		 	<if test="warehouseId > 0">
+		 		and w.warehouse_id = #{warehouseId}
+		 	</if>
+		 	order by 
+		    s.record_wId limit #{param1},#{param2}
+	</select>
+	
+	<select id="findBygoodsId" resultMap="storage">
+		select
+			w.warehouse_id as warehouseId,
+			s.record_number as number,
+			g.good_id as good_id,
+			g.good_name as good_Name,
+			g.good_type as good_Type,
+			g.good_size as good_Size,
+			g.good_value as good_Value
+		from
+			wms_record_storage s,wms_warehouse w, wms_goods g
+		where
+		    s.record_goodId = #{goodsId} and
+		 	s.record_goodId = g.good_id and
+		 	s.record_wId = w.warehouse_id
+		 	<if test="warehouseId > 0">
+		 		and w.warehouse_id = #{warehouseId}
+		 	</if>
+		 	order by 
+		    s.record_wId limit #{param1},#{param2}
+	</select>
+	
+	<select id="findBygoodsName" resultMap="storage">
+		select
+			w.warehouse_id as warehouseId,
+			s.record_number as number,
+			g.good_id as good_id,
+			g.good_name as good_Name,
+			g.good_type as good_Type,
+			g.good_size as good_Size,
+			g.good_value as good_Value
+		from
+			wms_record_storage s,wms_warehouse w, wms_goods g
+		where
+		    g.good_name like concat('%',#{goodsName},'%') and
+		    s.record_goodId = g.good_id and
+		 	s.record_wId = w.warehouse_id
+		 	<if test="warehouseId > 0">
+		 		and w.warehouse_id = #{warehouseId}
+		 	</if>
+		 	order by 
+		    s.record_wId limit #{param1},#{param2}
+	</select>
+	
+	<select id="findBygoodsType" resultMap="storage">
+		select
+			w.warehouse_id as warehouseId,
+			s.record_number as number,
+			g.good_id as good_id,
+			g.good_name as good_Name,
+			g.good_type as good_Type,
+			g.good_size as good_Size,
+			g.good_value as good_Value
+		from
+			wms_record_storage s,wms_warehouse w, wms_goods g
+		where
+		    g.good_type = #{goodsType} and
+		 	s.record_goodId = g.good_id and
+		 	s.record_wId = w.warehouse_id
+		 	<if test="warehouseId > 0">
+		 		and w.warehouse_id = #{warehouseId}
+		 	</if>
+		 	order by 
+		    s.record_wId limit #{param1},#{param2}
+	</select>
+	
+	<update id="update">
+		update 
+			wms_record_storage
+		set
+			record_goodId = #{goodsId},
+			record_wId = #{warehouseId},
+			record_number = #{number}
+		where
+			record_goodId = #{goodsId} and
+			record_wId = #{warehouseId}
+	</update>
+	
+	
+	<select id="findNumberBoolean" resultMap="storage">
+	    select
+			s.record_number as number
+		from
+			wms_record_storage s
+		where
+		    s.record_goodId = #{param1} and
+	        s.record_wId =  #{param2}
+	</select>
+	
+	   <insert id="insert">
+		insert into wms_record_storage
+		(
+			record_goodId,
+			record_wId,
+			record_number
+		)
+		values
+		(
+			#{goodsId},
+			#{warehouseId},
+			#{number}
+		)
+		
+	</insert>
+	
+	<select id="find_ById" resultMap="storage">
+	    select
+	       s.record_goodId as good_id,
+	       s.record_wId as warehouseId,
+	       s.record_number as number
+		from
+			wms_record_storage s
+		where
+		    s.record_goodId = #{param1} and
+	        s.record_wId =  #{param2}
+	</select>
+<!--	
+      <insert id="insert">
+		insert into wms_record_storage
+		(
+			RECORD_GOODID,
+			RECORD_REPOSITORY,
+			RECORD_NUMBER
+		)
+		values
+		(
+			#{goodsID},
+			#{repositoryID},
+			#{number}
+		)
+	</insert>
+	
+	<insert id="insertBatch">
+		insert into wms_record_storage(RECORD_GOODID,RECORD_REPOSITORY,RECORD_NUMBER)
+		values
+		<foreach collection="list" item="storage" separator=",">
+			(
+			#{storage.goodsID},#{storage.repositoryID},#{storage.number})
+		</foreach>
+	</insert>
+-->
+
+	<delete id="deleteByWarehouseIdAndGoodsId"  >
+		delete from
+			wms_record_storage w
+		where
+			w.record_goodId = #{goodsId} and
+			w.record_wId = #{warehouseId}
+	</delete>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>

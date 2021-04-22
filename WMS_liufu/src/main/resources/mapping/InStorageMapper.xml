@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wms.repository.InstorageRepository">
+	
+	<resultMap type="Instorage" id="Instorage">
+		<id property="id" column="record_id"/>
+		<result property="supplierId" column="supplierId"/>
+		<result property="supplierName" column="supplierName"/>
+		<result property="goodId" column="goodId"/>
+		<result property="goodName" column="goodName"/>
+		<result property="number" column="number"/>
+		<result property="time" column="record_time"/>
+		<result property="person" column="record_person"/>
+		<result property="warehouseId" column="record_wId"/>
+	</resultMap>
+	
+
+<insert id="insert">
+		insert into wms_record_in(record_supplierId,record_goodId,
+		record_number,record_time,record_person,record_wId)
+		values(#{supplierId},#{goodId},#{number},#{time},#{person},#{warehouseId})
+</insert>
+
+<select id="findAllById" resultMap="Instorage">
+		select
+			r.record_id as record_id,
+			r.record_supplierId as supplierId,
+			s.supplier_name as supplierName,
+			r.record_goodId as goodId,
+			g.good_name as goodName,
+			r.record_number as number,
+			r.record_time as record_time,
+			r.record_person as record_person,
+			r.record_wId as record_wId
+		from
+			wms_record_in r,wms_goods g,wms_supplier s
+		where
+			r.record_supplierId = s.supplier_id and
+			r.record_goodId = g.good_id and
+			r.record_id = #{id} and
+			r.record_time between #{param5} and #{param6}
+			<if test="warehouseId > 0">
+		 		and r.record_wId = #{warehouseId}
+		 	</if>
+		order by 
+		    r.record_id limit #{param1},#{param2}
+</select>
+
+<select id="findAllByGoodId" resultMap="Instorage">
+		select
+			r.record_id as record_id,
+			r.record_supplierId as supplierId,
+			s.supplier_name as supplierName,
+			r.record_goodId as goodId,
+			g.good_name as goodName,
+			r.record_number as number,
+			r.record_time as record_time,
+			r.record_person as record_person,
+			r.record_wId as record_wId
+		from
+			wms_record_in r,wms_goods g,wms_supplier s
+		where
+			r.record_supplierId = s.supplier_id and
+			r.record_goodId = g.good_id and
+			r.record_time between #{param5} and #{param6} and
+			r.record_goodId = #{goodId}
+			<if test="warehouseId > 0">
+		 		and r.record_wId = #{warehouseId}
+		 	</if>
+		order by 
+		    r.record_id limit #{param1},#{param2}
+</select>
+
+<select id="findAllByGoodName" resultMap="Instorage">
+		select
+			r.record_id as record_id,
+			r.record_supplierId as supplierId,
+			s.supplier_name as supplierName,
+			r.record_goodId as goodId,
+			g.good_name as goodName,
+			r.record_number as number,
+			r.record_time as record_time,
+			r.record_person as record_person,
+			r.record_wId as record_wId
+		from
+			wms_record_in r,wms_goods g,wms_supplier s
+		where
+			r.record_supplierId = s.supplier_id and
+			r.record_time between #{param5} and #{param6} and
+			r.record_goodId = g.good_id and
+			g.good_name  like concat('%',#{param3},'%')
+			<if test="warehouseId > 0">
+		 		and r.record_wId = #{warehouseId}
+		 	</if>
+		order by 
+		    r.record_id limit #{param1},#{param2}
+</select>
+
+
+<select id="findAllBySupplierId" resultMap="Instorage">
+		select
+			r.record_id as record_id,
+			r.record_supplierId as supplierId,
+			s.supplier_name as supplierName,
+			r.record_goodId as goodId,
+			g.good_name as goodName,
+			r.record_number as number,
+			r.record_time as record_time,
+			r.record_person as record_person,
+			r.record_wId as record_wId
+		from
+			wms_record_in r,wms_goods g,wms_supplier s
+		where
+			r.record_supplierId = s.supplier_id and
+			r.record_time between #{param5} and #{param6} and
+			r.record_goodId = g.good_id and
+			r.record_supplierId = #{supplierId}
+			<if test="warehouseId > 0">
+		 		and r.record_wId = #{warehouseId}
+		 	</if>
+		order by 
+		    r.record_id limit #{param1},#{param2}
+</select>
+
+<select id="findAllBySupplierName" resultMap="Instorage">
+		select
+			r.record_id as record_id,
+			r.record_supplierId as supplierId,
+			s.supplier_name as supplierName,
+			r.record_goodId as goodId,
+			g.good_name as goodName,
+			r.record_number as number,
+			r.record_time as record_time,
+			r.record_person as record_person,
+			r.record_wId as record_wId
+		from
+			wms_record_in r,wms_goods g,wms_supplier s
+		where
+			r.record_supplierId = s.supplier_id and
+			r.record_time between #{param5} and #{param6} and
+			r.record_goodId = g.good_id and
+			s.supplier_name like concat('%',#{param3},'%')
+			<if test="warehouseId > 0">
+		 		and r.record_wId = #{warehouseId}
+		 	</if>
+		order by 
+		    r.record_id limit #{param1},#{param2}
+</select>
+
+
+<select id="findAllAndWarehouseId" resultMap="Instorage">
+		select
+			r.record_id as record_id,
+			r.record_supplierId as supplierId,
+			s.supplier_name as supplierName,
+			r.record_goodId as goodId,
+			g.good_name as goodName,
+			r.record_number as number,
+			r.record_time as record_time,
+			r.record_person as record_person,
+			r.record_wId as record_wId
+		from
+			wms_record_in r,wms_goods g,wms_supplier s
+		where
+			r.record_supplierId = s.supplier_id and
+			r.record_time between #{param4} and #{param5} and
+			r.record_goodId = g.good_id 
+			<if test="warehouseId > 0">
+		 		and r.record_wId = #{warehouseId}
+		 	</if>
+		order by 
+		    r.record_id limit #{param1},#{param2}
+</select>
+
+    <select id="count" resultType="int">
+		select count(*) from wms_record_in;
+	</select>
+
+    <delete id="deleteById">
+		delete from wms_record_in
+		where record_id = #{id}
+    </delete>
+
+<!-- 
+<update id="update">
+		update 
+			wms_record_in
+		set
+			record_supplierId = #{supplierId},
+			record_goodId = #{goodId},
+			record_number = #{number},
+			record_time = #{time},
+			record_person = #{person}
+		where
+			record_id = #{id}
+	</update>
+
+
+
+
+
+
+
+
+
+	<select id="selectAll" resultMap="Instorage">
+		select
+			r.RECORD_ID as STOCKIN_ID,
+			r.RECORD_SUPPLIERID as STOCKIN_SUPPLIER_ID,
+			s.SUPPLIER_NAME as STOCKIN_SUPPLIER_NAME,
+			r.RECORD_GOODID as STOCKIN_GOOD_ID,
+			g.GOOD_NAME as STOCKIN_GOOD_NAME,
+			r.RECORD_NUMBER as STOCKIN_NUMBER,
+			r.RECORD_TIME as STOCKIN_TIME,
+			r.RECORD_PERSON as STOCKIN_PERSON,
+			r.RECORD_REPOSITORYID as STOCKIN_REPOSITORY_ID
+		from
+			wms_record_in r,wms_goods g,wms_supplier s
+		where
+			r.RECORD_SUPPLIERID = s.SUPPLIER_ID and
+			r.RECORD_GOODID = g.GOOD_ID
+	</select>
+	
+	<select id="selectBySupplierId" resultMap="Instorage">
+		select
+			r.RECORD_ID as STOCKIN_ID,
+			r.RECORD_SUPPLIERID as STOCKIN_SUPPLIER_ID,
+			s.SUPPLIER_NAME as STOCKIN_SUPPLIER_NAME,
+			r.RECORD_GOODID as STOCKIN_GOOD_ID,
+			g.GOOD_NAME as STOCKIN_GOOD_NAME,
+			r.RECORD_NUMBER as STOCKIN_NUMBER,
+			r.RECORD_TIME as STOCKIN_TIME,
+			r.RECORD_PERSON as STOCKIN_PERSON,
+			r.RECORD_REPOSITORYID as STOCKIN_REPOSITORY_ID
+		from
+			wms_record_in r,wms_goods g,wms_supplier s
+		where
+			r.RECORD_SUPPLIERID = s.SUPPLIER_ID and
+			r.RECORD_GOODID = g.GOOD_ID and
+			r.RECORD_SUPPLIERID = #{supplierID}
+	</select>
+	
+	<select id="selectByGoodID" resultMap="Instorage">
+		select
+			r.RECORD_ID as STOCKIN_ID,
+			r.RECORD_SUPPLIERID as STOCKIN_SUPPLIER_ID,
+			s.SUPPLIER_NAME as STOCKIN_SUPPLIER_NAME,
+			r.RECORD_GOODID as STOCKIN_GOOD_ID,
+			g.GOOD_NAME as STOCKIN_GOOD_NAME,
+			r.RECORD_NUMBER as STOCKIN_NUMBER,
+			r.RECORD_TIME as STOCKIN_TIME,
+			r.RECORD_PERSON as STOCKIN_PERSON,
+			r.RECORD_REPOSITORYID as STOCKIN_REPOSITORY_ID
+		from
+			wms_record_in r,wms_goods g,wms_supplier s
+		where
+			r.RECORD_SUPPLIERID = s.SUPPLIER_ID and
+			r.RECORD_GOODID = g.GOOD_ID and
+			r.RECORD_GOODID = #{goodID}
+	</select>
+	
+	<select id="selectByID" resultMap="Instorage">
+		select
+			r.RECORD_ID as STOCKIN_ID,
+			r.RECORD_SUPPLIERID as STOCKIN_SUPPLIER_ID,
+			s.SUPPLIER_NAME as STOCKIN_SUPPLIER_NAME,
+			r.RECORD_GOODID as STOCKIN_GOOD_ID,
+			g.GOOD_NAME as STOCKIN_GOOD_NAME,
+			r.RECORD_NUMBER as STOCKIN_NUMBER,
+			r.RECORD_TIME as STOCKIN_TIME,
+			r.RECORD_PERSON as STOCKIN_PERSON,
+			r.RECORD_REPOSITORYID as STOCKIN_REPOSITORY_ID
+		from
+			wms_record_in r,wms_goods g,wms_supplier s
+		where
+			r.RECORD_SUPPLIERID = s.SUPPLIER_ID and
+			r.RECORD_GOODID = g.GOOD_ID and
+			r.RECORD_ID = #{id}
+	</select>
+	
+	<select id="selectByRepositoryID" resultMap="Instorage">
+		select
+			r.RECORD_ID as STOCKIN_ID,
+			r.RECORD_SUPPLIERID as STOCKIN_SUPPLIER_ID,
+			s.SUPPLIER_NAME as STOCKIN_SUPPLIER_NAME,
+			r.RECORD_GOODID as STOCKIN_GOOD_ID,
+			g.GOOD_NAME as STOCKIN_GOOD_NAME,
+			r.RECORD_NUMBER as STOCKIN_NUMBER,
+			r.RECORD_TIME as STOCKIN_TIME,
+			r.RECORD_PERSON as STOCKIN_PERSON,
+			r.RECORD_REPOSITORYID as STOCKIN_REPOSITORY_ID
+		from
+			wms_record_in r,wms_goods g,wms_supplier s
+		where
+			r.RECORD_SUPPLIERID = s.SUPPLIER_ID and
+			r.RECORD_GOODID = g.GOOD_ID and
+			r.RECORD_REPOSITORYID = #{repositoryID}
+	</select>
+
+	<select id="selectByRepositoryIDAndDate" resultMap="Instorage">
+        select
+            r.RECORD_ID as STOCKIN_ID,
+            r.RECORD_SUPPLIERID as STOCKIN_SUPPLIER_ID,
+            s.SUPPLIER_NAME as STOCKIN_SUPPLIER_NAME,
+            r.RECORD_GOODID as STOCKIN_GOOD_ID,
+            g.GOOD_NAME as STOCKIN_GOOD_NAME,
+            r.RECORD_NUMBER as STOCKIN_NUMBER,
+            r.RECORD_TIME as STOCKIN_TIME,
+            r.RECORD_PERSON as STOCKIN_PERSON,
+            r.RECORD_REPOSITORYID as STOCKIN_REPOSITORY_ID
+        from
+            wms_record_in r,wms_goods g,wms_supplier s
+        where
+            r.RECORD_SUPPLIERID = s.SUPPLIER_ID and
+            r.RECORD_GOODID = g.GOOD_ID
+        <if test="repositoryID > 0">
+            and r.RECORD_REPOSITORYID = #{repositoryID}
+        </if>
+        <if test="startDate != null">
+            and r.RECORD_TIME >= #{startDate}
+        </if>
+        <if test="endDate != null">
+            <![CDATA[and r.RECORD_TIME <= #{endDate}]]>
+        </if>
+	</select>
+	
+	
+	
+	
+	
+	<delete id="deleteByID">
+		delete from wms_record_in
+		where RECORD_ID = #{id}
+	</delete>
+	 -->
+</mapper>
