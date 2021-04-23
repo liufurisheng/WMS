@@ -24,7 +24,7 @@
      前端部分用ajax请求，回显数据
      //（一些修改删除操作我开始时用了后端跳转，返回结果类型没用Map<String,Object> 请多包涵，有时间慢慢完善安全权限管理部分）
          
-6:前端css部分没有怎么写，不同浏览器的长宽效果可能有些不同
+6:前端css部分没有怎么写，不同浏览器的长宽效果可能有些不同，本人是用火狐浏览器的
 
 ![图片](https://user-images.githubusercontent.com/74752638/115820544-9b41cc00-a433-11eb-82d7-5845d9787a43.png)
 ![图片](https://user-images.githubusercontent.com/74752638/115820555-a3017080-a433-11eb-8f2c-a7df2c34f706.png)
